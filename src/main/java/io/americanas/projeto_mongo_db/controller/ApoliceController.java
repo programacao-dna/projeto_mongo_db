@@ -46,4 +46,14 @@ public class ApoliceController {
     public ResponseEntity<List<Apolice>> getApolices() {
         return ResponseEntity.ok().body(apoliceService.ListarTodasApolices());
     }
+
+    @PostMapping("/{apoliceId}/{subApoliceNumero}")
+    public ResponseEntity<Object> atualizarSubApoliceV2(@Valid @PathVariable String apoliceId, @PathVariable String subApoliceNumero, @RequestBody SubApolice subApolice) {
+        try{
+           var apolice =  apoliceService.atualizarSubApoliceV2(apoliceId, subApoliceNumero, subApolice);
+           return ResponseEntity.ok().body(apolice);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

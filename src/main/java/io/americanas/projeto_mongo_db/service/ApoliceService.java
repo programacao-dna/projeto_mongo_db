@@ -7,6 +7,7 @@ import io.americanas.projeto_mongo_db.exceptions.SubApoliceNotFoundException;
 import io.americanas.projeto_mongo_db.repository.ApoliceRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +72,34 @@ public class ApoliceService {
             }
         }
         throw new SubApoliceNotFoundException();
+    }
+
+    public Apolice atualizarSubApoliceV2(String apoliceNumero, String subApoliceNumero, SubApolice updatedChild) {
+        Apolice apolice = apoliceRepository.findByNumeroApolice(apoliceNumero)
+                .orElseThrow(ApoliceNotFoundException::new);
+
+        List<SubApolice> subapolicesAtualizadas = apolice.getSubApolices().stream()
+                .map(s -> {
+                    if (s.getNumeroApolice().equals(subApoliceNumero)) {
+                        return SubApolice.builder()
+                                .descrico(updatedChild.getDescrico() != null ? updatedChild.getDescrico() :
+                                        s.getDescrico())
+                                .valorSegurado(updatedChild.getValorSegurado() != s.getValorSegurado() ? updatedChild.getValorSegurado() :
+                                        s.getValorSegurado())
+                                .dataInicio(updatedChild.getDataInicio())
+                                .dataFim(updatedChild.getDataFim())
+                                .createdAt(LocalDate.now())
+                                .updatedAt(LocalDate.now())
+                                .numeroApolice(subApoliceNumero)
+                                .build();
+                    } else {
+                        return s;
+                    }
+                })
+                .toList();
+
+        apolice.setSubApolices(subapolicesAtualizadas);
+        apoliceRepository.save(apolice);
+        return apolice;
     }
 }
