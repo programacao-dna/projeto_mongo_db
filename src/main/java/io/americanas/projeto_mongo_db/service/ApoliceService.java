@@ -23,9 +23,9 @@ public class ApoliceService {
         return apoliceRepository.findAll();
     }
 
-    public Optional<Apolice> BuscarApolicePorNumeroApolice(String numeroApolice) {
-        return apoliceRepository.findByNumeroApolice(numeroApolice);
-    }
+//    public Optional<Apolice> BuscarApolicePorNumeroApolice(String numeroApolice) {
+//        return apoliceRepository.findByNumeroApolice(numeroApolice);
+//    }
 
     public Apolice criarApolice(Apolice apolice) {
         Optional<Apolice> existApolice = apoliceRepository.findByNumeroApolice(apolice.getNumeroApolice());

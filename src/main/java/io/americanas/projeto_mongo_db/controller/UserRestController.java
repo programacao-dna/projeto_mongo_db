@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/users")
-@EnableMongoAuditing
+//@EnableMongoAuditing
 public class UserRestController {
 
     private final UserService userService;

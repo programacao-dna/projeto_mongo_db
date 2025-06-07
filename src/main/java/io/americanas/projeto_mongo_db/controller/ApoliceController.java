@@ -5,14 +5,15 @@ import io.americanas.projeto_mongo_db.entinty.SubApolice;
 import io.americanas.projeto_mongo_db.repository.ApoliceRepository;
 import io.americanas.projeto_mongo_db.service.ApoliceService;
 import jakarta.validation.Valid;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/apolice")
+@EnableMongoAuditing
 public class ApoliceController {
 
     private final ApoliceService apoliceService;
@@ -31,13 +32,18 @@ public class ApoliceController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Object> addSubapolice(@Valid @RequestBody String numeroApolice, SubApolice subApolice) {
+    @PostMapping("/{numeroParentApolice}")
+    public ResponseEntity<Object> addSubapolice(@Valid @PathVariable String numeroParentApolice, @RequestBody SubApolice subApolice) {
         try{
-            var retorno =  apoliceService.criarSubApoliceParaApolice(numeroApolice, subApolice);
+            var retorno =  apoliceService.criarSubApoliceParaApolice(numeroParentApolice, subApolice);
             return ResponseEntity.ok().body(retorno);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Apolice>> getApolices() {
+        return ResponseEntity.ok().body(apoliceService.ListarTodasApolices());
     }
 }
